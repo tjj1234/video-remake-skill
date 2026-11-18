@@ -1,0 +1,13 @@
+# runtime deps (installed locally by install.py)
+.venv/
+tools/
+out/
+# local config with API key
+config.json
+*.bak*
+# python
+__pycache__/
+*.pyc
+# os
+.DS_Store
+Thumbs.db

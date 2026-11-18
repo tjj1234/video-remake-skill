@@ -1,0 +1,26 @@
+{
+  "pt_video_script": "",
+  "pt_video_candidates": [
+    "~/.workbuddy/skills/powertokens-video/scripts/pt_video.py",
+    "~/.agents/skills/powertokens-video/scripts/pt_video.py",
+    "~/powertokens-kit/scripts/pt_video.py"
+  ],
+  "python": "",
+  "default_model": "wan3.0-video",
+  "default_duration": 5,
+  "default_resolution": "720p",
+  "vertical_ratio": "9:16",
+  "target_width": 1080,
+  "target_height": 1920,
+  "max_shots": 12,
+  "keep_source": false,
+  "vlm": {
+    "enabled": true,
+    "base_url": "https://api.powertokens.ai/v1",
+    "api_key_env": "REA_VLM_API_KEY",
+    "model": "qwen3.8-flash",
+    "media": "frames",
+    "reasoning_effort": ""
+  },
+  "workdir": "out"
+}
