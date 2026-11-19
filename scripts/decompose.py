@@ -71,12 +71,11 @@ def main() -> int:
         base = vlm.get("base_url", "") or "https://api.powertokens.ai/v1"
         model = vlm.get("model", "") or "qwen3.8-flash"
         env_key_name = vlm.get("api_key_env", "REA_VLM_API_KEY")
-        # 优先复用 powertokens-video 已配好的 PT Key（零配置）；环境变量可覆盖
-        api_key = os.environ.get(env_key_name, "") or resolve_pt_key()
+        # S3：Key 只认调用方传入的 POWERTOKENS_API_KEY，不再翻其他 skill 配置
+        api_key = resolve_pt_key()
         if not (base and model and api_key):
             print(
-                f"错误：--vlm 需要 PT Key。已尝试从 powertokens-video/config.json 自动读取。"
-                f"若无 Key，请设环境变量 POWER_TOKENS_API_KEY 或在 powertokens-video skill 里配置。"
+                "错误：--vlm 需要 PT Key。请由调用方设环境变量 POWERTOKENS_API_KEY（skill 不读任何配置文件）。"
                 "不开 --vlm 可跑离线模式（但重压缩源准确率会降）。", file=sys.stderr
             )
             return 2

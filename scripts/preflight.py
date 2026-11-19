@@ -64,10 +64,11 @@ def main() -> int:
         )
 
     # PT Key（调 pt_video.py check）
+    # S3 零打印：check 的原始输出含 key_masked 尾号，绝不透传/落盘；只保留布尔结论。
     if pt:
         cp3 = run([py, str(pt), "check"], capture=True, check=False)
         key_ok = cp3.returncode == 0
-        detail = ((cp3.stdout or "") + (cp3.stderr or "")).strip()[:400]
+        detail = "已配置（校验通过）" if key_ok else "未配置或校验失败（详见 install_hints）"
         report["checks"]["pt_key"] = {"ok": key_ok, "detail": detail}
         if not key_ok:
             report["ok"] = False

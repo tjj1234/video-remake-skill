@@ -12,7 +12,6 @@ import urllib.request
 from pathlib import Path
 
 BASE = "https://api.powertokens.ai"
-CFG = Path.home() / ".workbuddy" / "skills" / "powertokens-video" / "config.json"
 IMG = (Path.home() / ".workbuddy" / "skills" / "video-remake" / "out" /
        "yt_GnsiYACM5ng" / "ref" / "shots" / "shot_001.jpg")
 
@@ -29,8 +28,8 @@ PROMPT = "这张图片里主要有什么内容？请用一句中文回答。"
 
 
 def load_key() -> str:
-    d = json.load(open(CFG, encoding="utf-8"))
-    return d.get("api_key", "")
+    """S3：只认调用方传入的 POWERTOKENS_API_KEY，不读任何配置文件。"""
+    return os.environ.get("POWERTOKENS_API_KEY", "").strip()
 
 
 def data_uri(p: Path) -> str:
@@ -82,7 +81,7 @@ def main() -> int:
     if not IMG.exists():
         print("NO IMAGE", IMG); return 2
     uri = data_uri(IMG)
-    print(f"key=****{key[-4:]}  image={IMG.name} ({IMG.stat().st_size//1024}KB)")
+    print(f"image={IMG.name} ({IMG.stat().st_size//1024}KB)  [key sourced from env, not printed]")
     print("=" * 60)
     results = []
     for m in CANDIDATES:
@@ -97,7 +96,7 @@ def main() -> int:
     print("WORKING:", ", ".join(ok) if ok else "(none)")
     out = Path(__file__).parent.parent / "out" / "vlm_probe.json"
     out.parent.mkdir(parents=True, exist_ok=True)
-    json.dump({"key_tail": key[-4:], "results": results, "working": ok},
+    json.dump({"results": results, "working": ok},
               open(out, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
     print("saved:", out)
     return 0

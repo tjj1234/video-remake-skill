@@ -33,7 +33,7 @@ Key 不写在这里，由 pt_video.py 自己管理（`pt_video.py config --set-k
 - yt-dlp 2026.10.26 → `.venv/`
 - rea-video 0.1.0（CLI `decompose` 可用）→ `tools/rea-video` + `.venv/`
 - ffmpeg 9.0.2-essentials → `tools/ffmpeg-9.0.2-essentials_build/bin/ffmpeg.exe`
-- PT Key 尾号 xo4E，默认模型 wan3.0-video
+- PT Key（由 pt_video.py 自行管理，不写在本 skill 里），默认模型 wan3.0-video
 
 **网络不稳时的兜底脚本**（本沙箱实测：git clone 与 urllib 单次下载都会中途断连）：
 - `scripts/_fetch_rea_tarball.py`：用 GitHub codeload tarball + 5 次重试下载 rea-video 源码，替代易断的 git clone。

@@ -154,6 +154,7 @@ def main() -> int:
                     help="复用已生成的 BGM 段与旁白，只重做拼接+混音（修复容器问题/调音量，不花钱）")
     ap.add_argument("--bgm-vol", type=float, default=0.28, help="BGM 音量（默认 0.28）")
     ap.add_argument("--voice-vol", type=float, default=1.25, help="旁白音量（默认 1.25）")
+    ap.add_argument("--audio-backend", default="local", help="音频后端：local（当前）；可扩展其它实现")
     args = ap.parse_args()
 
     cfg = load_config()
@@ -162,12 +163,16 @@ def main() -> int:
     adir.mkdir(parents=True, exist_ok=True)
     key = resolve_pt_key()
     if not key:
-        print("错误：找不到 PT key", file=sys.stderr)
+        print("错误：找不到 PT Key（请由调用方设环境变量 POWERTOKENS_API_KEY）", file=sys.stderr)
         return 2
     ff = resolve_tool("ffmpeg")
     if not ff:
         print("错误：找不到 ffmpeg", file=sys.stderr)
         return 2
+
+    # S4：通过可替换音频后端调用（当前 LocalAudioBackend，行为与原来一致）
+    from audio_backend import get_audio_backend
+    ab = get_audio_backend(key, args.audio_backend)
 
     bgm = adir / "bgm.wav"
     if args.rebuild_mix:
@@ -181,7 +186,7 @@ def main() -> int:
     elif args.reuse_bgm and bgm.exists():
         print(f"[bgm] 复用已有 {bgm.name}")
     else:
-        segs = gen_bgm(key, adir)
+        segs = ab.generate_music(adir)
         concat_audio(ff, segs, bgm)
         print(f"[bgm] BGM 成品 {bgm.name} ({bgm.stat().st_size//1024}KB)")
 
@@ -200,9 +205,9 @@ def main() -> int:
         if not text:
             print("错误：需要 --narration 或 --narration-file", file=sys.stderr)
             return 2
-        nar = gen_narration(key, text, nar, args.voice)
+        nar = ab.generate_speech(text, nar, args.voice)
     mixed = adir / "mixed.m4a"
-    mix(ff, bgm, nar, mixed, args.target_sec, args.bgm_vol, args.voice_vol)
+    ab.mix(bgm, nar, mixed, args.target_sec, args.bgm_vol, args.voice_vol)
     dump_json(adir / "audio_meta.json", {
         "bgm": str(bgm), "narration": str(nar), "mixed": str(mixed),
         "narration_text": text, "voice": args.voice, "target_sec": args.target_sec,

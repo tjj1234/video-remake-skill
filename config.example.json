@@ -22,5 +22,12 @@
     "media": "frames",
     "reasoning_effort": ""
   },
+  "download_helpers": [
+    { "name": "Cobalt", "url": "https://cobalt.tools", "note": "开源免费、无广告无追踪、不缓存、支持四平台、可选 MP4/H.264；首选，YouTube 官方实例可能受限" },
+    { "name": "downloader.asia", "url": "https://downloader.asia", "note": "免费、内存处理不留存、明确不碰登录/付费/DRM 内容" },
+    { "name": "SnapTik", "url": "https://snaptik.app", "note": "TikTok 单平台、无水印；广告多、域名常变" },
+    { "name": "SnapInsta", "url": "https://snapinsta.app", "note": "Instagram 单平台、无水印；广告多、域名常变" },
+    { "name": "SnapAny", "url": "https://snapany.com", "note": "多平台、国内可访问；站点资质用户自判" }
+  ],
   "workdir": "out"
 }
